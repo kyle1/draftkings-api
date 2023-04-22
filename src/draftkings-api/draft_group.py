@@ -3,7 +3,7 @@ from typing import List, Optional
 
 
 class DraftGroup:
-    def __init__(self, json):
+    def __init__(self, json: dict):
         self.draft_group_id = json['DraftGroupId']
         self.contest_type_id = json['ContestTypeId']
         self.start_date = json['StartDate']
@@ -23,19 +23,11 @@ class DraftGroup:
         self.allow_ugc = json['AllowUGC']
 
     
-def get_draft_groups(sport: Optional[str] = None):
+def get_draft_groups(sport: Optional[str] = None) -> List[DraftGroup]:
     url = 'https://www.draftkings.com/lobby/getcontests'
     if sport != None:
         url += f'?sport={sport}'
     response = requests.get(url)
-    draft_groups_json = response.json()
-    draft_groups: List[DraftGroup] = []
-    for dg_json in draft_groups_json['DraftGroups']:
-        draft_group = DraftGroup(dg_json)
-        draft_groups.append(draft_group)
+    draft_groups_json: dict = response.json()['DraftGroups']
+    draft_groups: List[DraftGroup] = [DraftGroup(json) for json in draft_groups_json]
     return draft_groups
-
-dgs = get_draft_groups('MLB')
-for dg in dgs:
-    print(dg.draft_group_id)
-    print('\n')

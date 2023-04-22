@@ -3,7 +3,7 @@ from typing import List
 
 
 class Sport:
-    def __init__(self, json):
+    def __init__(self, json: dict):
         self.sport_id = json['sportId']
         self.full_name = json['fullName']
         self.sort_order = json['sortOrder']
@@ -15,9 +15,6 @@ class Sport:
 
 def get_sports() -> List[Sport]:
     response = requests.get('https://api.draftkings.com/sites/US-DK/sports/v1/sports?format=json')
-    sports_json = response.json()
-    sports: List[Sport] = []
-    for sport_json in sports_json['sports']:
-        sport = Sport(sport_json)
-        sports.append(sport)
+    sports_json: dict = response.json()['sports']
+    sports: List[Sport] = [Sport(json) for json in sports_json]
     return sports
