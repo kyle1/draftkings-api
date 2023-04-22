@@ -1,7 +1,3 @@
-import requests
-from typing import List, Optional
-
-
 class DraftGroup:
     def __init__(self, json: dict):
         self.draft_group_id = json['DraftGroupId']
@@ -21,13 +17,3 @@ class DraftGroup:
         self.draft_group_series_id = json['DraftGroupSeriesId']
         self.game_set_key = json['GameSetKey']
         self.allow_ugc = json['AllowUGC']
-
-    
-def get_draft_groups(sport: Optional[str] = None) -> List[DraftGroup]:
-    url = 'https://www.draftkings.com/lobby/getcontests'
-    if sport != None:
-        url += f'?sport={sport}'
-    response = requests.get(url)
-    draft_groups_json: dict = response.json()['DraftGroups']
-    draft_groups: List[DraftGroup] = [DraftGroup(json) for json in draft_groups_json]
-    return draft_groups

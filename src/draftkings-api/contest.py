@@ -1,7 +1,3 @@
-import requests
-from typing import List, Optional
-
-
 class Contest:
     def __init__(self, json: dict):
         self.uc = json['uc']
@@ -38,10 +34,7 @@ class Contest:
 
 
 class ContestDetail:
-    def __init__(self, id: int):
-        response = requests.get(f'https://api.draftkings.com/contests/v1/contests/{id}?format=json')
-        json = response.json()['contestDetail']
-
+    def __init__(self, json: dict):
         self.contest_summary = json['contestSummary']
         self.payout_summary = [PayoutSummaryTier(ps_json) for ps_json in json['payoutSummary']]
         self.payout_description = json['PayoutDescription']
@@ -84,13 +77,3 @@ class PayoutSummaryTier:
         self.max_position = json['maxPosition']
         self.tier_payout_descriptions = json['tierPayoutDescriptions']
         self.payoutDescriptions = json['payoutDescriptions']
-
-
-def get_contests(sport: Optional[str] = None) -> List[Contest]:
-    url = 'https://www.draftkings.com/lobby/getcontests'
-    if sport != None:
-        url += f'?sport={sport}'
-    response = requests.get(url)
-    contests_json: dict = response.json()
-    contests: List[Contest] = [Contest(json) for json in contests_json]
-    return contests
