@@ -4,20 +4,6 @@ from typing import List
 
 class Sport:
     def __init__(self, json):
-        self.sport_id: None
-        self.full_name: None
-        self.sort_order: None
-        self.has_public_contests: None
-        self.is_enabled: None
-        self.region_full_sport_name: None
-        self.region_abbreviated_sport_name: None
-
-        self._json_to_obj(json)
-
-    def __str__(self):
-        return f'{self.sport_id} {self.full_name}'
-
-    def _json_to_obj(self, json: dict):
         self.sport_id = json['sportId']
         self.full_name = json['fullName']
         self.sort_order = json['sortOrder']
