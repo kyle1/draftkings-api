@@ -1,7 +1,3 @@
-import requests
-from typing import List
-
-
 class Draftable:
     def __init__(self, json: dict):
         self.draftable_id = json['draftableId']
@@ -32,10 +28,3 @@ class Draftable:
         self.team_abbreviation = json['teamAbbreviation']
         self.draft_alerts = json['draftAlerts']
         self.player_game_has = json['playerGameHash']
-
-
-def get_draftables(draft_group_id) -> List[Draftable]:
-    response = requests.get(f'https://api.draftkings.com/draftgroups/v1/draftgroups/{draft_group_id}/draftables')
-    draftables_json = response.json()['draftables']
-    draftables = [Draftable(json) for json in draftables_json]
-    return draftables
