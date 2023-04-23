@@ -33,17 +33,23 @@ class DraftKingsClient:
         game_type = GameType(game_type_json)
         return game_type
     
-    def get_contests(self, sport: Optional[str] = None) -> List[Contest]:
+    def get_contests(
+            self,
+            sport: Optional[str] = None,
+            as_json: bool = False
+        ) -> List[Contest] | dict:
         response = self._session.get(
             url='https://www.draftkings.com/lobby/getcontests',
             params={ 'sport': sport},
             timeout=TIMEOUT_SECONDS
         )
         contests_json = response.json()['Contests']
+        if as_json:
+            return contests_json
         contests = [Contest(json) for json in contests_json]
         return contests
     
-    def get_contest(self, id: int) -> ContestDetail:
+    def get_contest_detail(self, id: int) -> ContestDetail:
         response = self._session.get(
             url=f'https://api.draftkings.com/contests/v1/contests/{id}',
             params={ 'format': 'json' },
@@ -53,11 +59,17 @@ class DraftKingsClient:
         contest = ContestDetail(contest_json)
         return contest
     
-    def get_draftables(self, draft_group_id: int) -> List[Draftable]:
+    def get_draftables(
+            self,
+            draft_group_id: int,
+            as_json: bool = False
+        ) -> List[Draftable]:
         response = self._session.get(
             url=f'https://api.draftkings.com/draftgroups/v1/draftgroups/{draft_group_id}/draftables',
             timeout=TIMEOUT_SECONDS
         )
         draftables_json = response.json()['draftables']
+        if as_json:
+            return draftables_json
         draftables = [Draftable(json) for json in draftables_json]
         return draftables
